@@ -4,6 +4,8 @@ import { StatusBar } from 'expo-status-bar'
 import { doc, collection, addDoc, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
 import { db } from '../../firebase/firebaseConfig';
 import { CustomButton } from '../components';
+import { useDispatch } from 'react-redux';
+import { logout } from '../redux/userSlice';
 
 
 const HomePage = () => {
@@ -11,6 +13,7 @@ const HomePage = () => {
   const [data, setData] = useState([]);
   const [isSaved, setIsSaved] = useState(false);
   const [updateTheData, setUpdateTheData] = useState('');
+  const dispatch = useDispatch()
 
   console.log(isSaved);
 
@@ -72,6 +75,11 @@ const HomePage = () => {
     }
   }
 
+  // LOGOUT
+  const handleLogout = () => {
+    dispatch(logout())
+  }
+
   return (
     <View style={styles.container}>
       <StatusBar style='auto' />
@@ -130,6 +138,14 @@ const HomePage = () => {
         buttonColor="blue"
         pressButtonColor="gray"
         handleOnPress={updateData}
+      />
+
+      <CustomButton
+        buttonText="Logout"
+        setWidth="40%"
+        buttonColor="red"
+        pressButtonColor="gray"
+        handleOnPress={handleLogout}
       />
 
     </View>
