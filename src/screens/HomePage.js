@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TextInput, View, FlatList, SafeAreaView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { doc, collection, addDoc, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
@@ -6,6 +6,7 @@ import { db } from '../../firebase/firebaseConfig';
 import { CustomButton } from '../components';
 import { useDispatch } from 'react-redux';
 import { logout } from '../redux/userSlice';
+import Animated, {FlipInYRight,StretchInX } from 'react-native-reanimated';
 
 
 const HomePage = () => {
@@ -80,31 +81,38 @@ const HomePage = () => {
     dispatch(logout())
   }
 
+  const renderItem = ({ item, index }) => {
+    return (
+      <Animated.View
+        entering={FlipInYRight.delay((1 + index) * 100)}
+        style={styles.flatlistContainer}>
+        <Text>{item.id}</Text>
+        <Text>{item.title}</Text>
+        <Text>{item.content}</Text>
+        {/* <Text>{item.lesson}</Text> */}
+      </Animated.View>
+    );
+  };
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style='auto' />
       <Text>HomePage</Text>
 
-      <TextInput 
-      value={updateTheData}
-      onChangeText={setUpdateTheData}
-      placeholder='enter your data'
-      style={{borderWidth:1,width:'50%',paddingVertical:10, textAlign:'center',marginBottom:20}}
+      <TextInput
+        value={updateTheData}
+        onChangeText={setUpdateTheData}
+        placeholder='enter your data'
+        style={{ borderWidth: 1, width: '50%', paddingVertical: 10, textAlign: 'center', marginBottom: 20 }}
       />
 
-      {data.map((value, index) => {
-        return (
-          <Pressable
-          onPress={()=>[updateData(value.id), setIsSaved(isSaved === false ? true : false)]}
-          key={index}>
-            <Text>{index}</Text>
-            <Text>{value.id}</Text>
-            <Text>{value.title}</Text>
-            <Text>{value.content}</Text>
-            <Text>{value.lesson}</Text>
-          </Pressable>
-        )
-      })}
+      <Animated.FlatList
+        entering={StretchInX}
+        style={styles.flatlist}
+        data={data}
+        renderItem={renderItem}
+        keyExtractor={item => item.id}
+      />
 
       <CustomButton
         buttonText="Save"
@@ -148,7 +156,7 @@ const HomePage = () => {
         handleOnPress={handleLogout}
       />
 
-    </View>
+    </SafeAreaView>
   )
 }
 
@@ -160,5 +168,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'tomato'
+  },
+  flatlistContainer: {
+    borderWidth: 1,
+    marginVertical: 5,
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  flatlist: {
+    backgroundColor: "white",
+    width: "90%",
+    padding: 10
   }
 })
