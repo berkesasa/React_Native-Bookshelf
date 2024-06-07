@@ -70,8 +70,6 @@ export default function LoginPage({ navigation }) {
         </View>
       </ImageBackground>
 
-
-
       {isLoading
         ? <Loading name="Login" changeIsLoading={() => dispatch(setIsLoading(false))} />
         : null}
