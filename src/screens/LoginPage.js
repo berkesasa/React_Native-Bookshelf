@@ -25,8 +25,6 @@ export default function LoginPage({ navigation }) {
 
       <ImageBackground source={require('../../assets/background.jpg')} className="w-full h-full flex-1 items-center justify-center">
 
-        <View className="items-center justify-center rounded-xl overflow-hidden relative w-full">
-
           <Text className="text-4xl font-bold mb-5 text-white">Welcome!</Text>
           <Image
             className="w-full h-32 mb-5"
@@ -63,7 +61,6 @@ export default function LoginPage({ navigation }) {
             <Text className="text-white">Don't have an account? <Text className="text-white underline" onPress={() => navigation.navigate('Signup')}>Sign Up</Text></Text>
           </View>
 
-        </View>
       </ImageBackground>
 
       {isLoading

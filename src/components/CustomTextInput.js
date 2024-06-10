@@ -4,13 +4,14 @@ import { TextInput } from 'react-native'
 
 const CustomTextInput = ({ title, isSecureText, handleOnChangeText, handleValue, handlePlaceholder }) => {
     return (
-        <View style={styles.inputContainer}>
-            <Text style={styles.inputBoxText}>{title}</Text>
+        <View className="w-[80%] mb-5">
+            <Text className="font-bold flex-start text-white">{title}</Text>
             <TextInput
                 autoCapitalize='none'
                 placeholder={handlePlaceholder}
+                placeholderTextColor="#fff"
                 secureTextEntry={isSecureText}
-                style={styles.textInputStyle}
+                className="w-full h-12 text-white border-white border-b border-x rounded-lg px-4 mt-2 bg-transparent"
                 onChangeText={handleOnChangeText}
                 value={handleValue}
             />
@@ -21,9 +22,6 @@ const CustomTextInput = ({ title, isSecureText, handleOnChangeText, handleValue,
 export default CustomTextInput
 
 const styles = StyleSheet.create({
-    inputContainer: {
-        width: '80%',
-    },
     inputBoxText: {
         fontWeight: 'bold',
         alignSelf: 'flex-start',
