@@ -1,11 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import { Text, View, Image, ImageBackground } from 'react-native';
+import { Text, View, ImageBackground, Pressable } from 'react-native';
 import { Loading, CustomTextInput, CustomButton } from '../components';
 import { useDispatch, useSelector } from 'react-redux';
-import { setEmail, setPassword, setIsLoading, setLogin, login, autoLogin } from '../redux/userSlice';
+import { setIsLoading, login, autoLogin } from '../redux/userSlice';
 import { useState, useEffect } from 'react';
-import { BlurView } from 'expo-blur';
-
+import { Image } from 'expo-image';
 
 export default function LoginPage({ navigation }) {
 
@@ -28,10 +27,12 @@ export default function LoginPage({ navigation }) {
 
         <View className="items-center justify-center rounded-xl overflow-hidden relative w-full">
 
-          <Text className="text-[30px] font-bold mb-5 text-white">Welcome</Text>
+          <Text className="text-4xl font-bold mb-5 text-white">Welcome!</Text>
           <Image
-            className="w-32 h-32 mb-5"
-            source={require('../../assets/images/loginIcon.png')}
+            className="w-full h-32 mb-5"
+            source={require('../../assets/loginicon.png')}
+            contentFit="contain"
+            transition={1000}
           />
 
           <CustomTextInput
@@ -54,19 +55,14 @@ export default function LoginPage({ navigation }) {
 
           <CustomButton
             buttonText="Login"
-            setWidth="80%"
+            extraClasses='mt-5'
             handleOnPress={() => dispatch(login({ email, password }))}
-            buttonColor="blue"
-            pressButtonColor="lightblue"
           />
 
-          <CustomButton
-            buttonText="Sign Up"
-            setWidth="30%"
-            handleOnPress={() => navigation.navigate('Signup')}
-            buttonColor="red"
-            pressButtonColor="pink"
-          />
+          <View className="mt-5">
+            <Text className="text-white">Don't have an account? <Text className="text-white underline" onPress={() => navigation.navigate('Signup')}>Sign Up</Text></Text>
+          </View>
+
         </View>
       </ImageBackground>
 

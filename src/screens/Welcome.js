@@ -1,79 +1,38 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, ImageBackground } from 'react-native'
 import React, { useEffect } from 'react'
-import { LinearGradient } from 'expo-linear-gradient';
-import Animated, {
-    useSharedValue,
-    useAnimatedStyle,
-    withTiming,
-    withRepeat,
-    Easing,
-} from 'react-native-reanimated';
+import { StatusBar } from 'expo-status-bar';
+import { Image } from 'expo-image';
 import { CustomButton } from '../components';
 
 const Welcome = ({ navigation }) => {
-
-    // Shared value for vertical position
-    const translateY = useSharedValue(0);
-
-    // Define the animated style
-    const animatedStyle = useAnimatedStyle(() => {
-        return {
-            transform: [{ translateY: translateY.value }],
-        };
-    });
-
-    useEffect(() => {
-        // Run the animation
-        translateY.value = withRepeat(
-            withTiming(5, {
-                duration: 2000,
-                easing: Easing.linear,
-            }),
-            -1,
-            true
-        );
-    }, [translateY]);
-
     return (
-        <View className="w-full h-full flex items-center justify-start">
-            <LinearGradient
-                className="absolute top-0 left-0 right-0 h-full"
-                colors={['#392467', '#5D3587', '#A367B1']}
+        <View className="w-full h-full relative">
+            <StatusBar style="light" />
+            <ImageBackground source={require('../../assets/welcomebg.jpg')} className="w-full h-full flex-1 items-center justify-end">
+                <View className="self-start px-5">
+                    <Text className="text-white font-medium text-2xl">Explore your</Text>
+                    <Text className="text-white font-extrabold text-5xl mt-1">Book World</Text>
+                </View>
 
-            />
-            <Animated.View className="w-[70%] flex items-center justify-center" style={[animatedStyle]}>
                 <Image
-                    style={{
-                        resizeMode: 'contain',
-                    }}
-                    className="w-full"
+                    contentFit="contain"
+                    transition={1000}
+                    className="h-[45%] w-full my-5"
                     source={require('../../assets/welcome.png')}
                 />
-            </Animated.View>
 
-            <Text className="text-white text-xl text-center">
+                <View className="w-full py-3 relative bg-white/30 mb-5">
+                    <Text className="text-white text-center font-medium text-lg">Lorem ipsum dolor sit amet.</Text>
+                </View>
 
-                {`
-Didn't you find anyone in space?
-Let's take a look at this
-`}
-            </Text>
+                <CustomButton
+                    buttonText="Let's get started!"
+                    extraClasses="mb-[15%] w-[70%]"
+                    handleOnPress={() => navigation.navigate('Login')}
+                />
 
-            <CustomButton
-                buttonText="Login"
-                setWidth="80%"
-                handleOnPress={() => navigation.navigate('Login')}
-                buttonColor="blue"
-                pressButtonColor="lightblue"
-            />
+            </ImageBackground>
 
-            <CustomButton
-                buttonText="Sign Up"
-                setWidth="30%"
-                handleOnPress={() => navigation.navigate('Signup')}
-                buttonColor="red"
-                pressButtonColor="pink"
-            />
         </View>
     )
 }

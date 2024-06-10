@@ -27,10 +27,10 @@ const SignupPage = ({navigation}) => {
 
 
       <View style={styles.title}>
-        <Image
+        {/* <Image
           style={styles.image}
           source={require('../../assets/images/signupIcon.png')}
-        />
+        /> */}
         <Text style={styles.signUp}>Sign Up</Text>
       </View>
 
@@ -66,9 +66,9 @@ const SignupPage = ({navigation}) => {
           pressButtonColor="lightblue"
           handleOnPress={handleRegister}
         />
-        <Pressable onPress={()=>navigation.navigate("Login")}>
-          <Text style={{fontWeight: "bold"}}>Already have an accoun? Login</Text>
-        </Pressable>
+        <View className="mt-5">
+            <Text className="text-white">Already have an account? <Text className="text-white underline" onPress={() => navigation.navigate('Login')}>Login</Text></Text>
+          </View>
       </View>
 
     </SafeAreaView>

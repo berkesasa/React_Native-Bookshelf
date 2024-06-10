@@ -1,19 +1,25 @@
 import { StyleSheet, View, Text, ActivityIndicator, Pressable } from 'react-native';
+import { Image } from 'expo-image';
+
 import React from 'react';
 
-const Loading = ({changeIsLoading,name}) => {
+const Loading = ({ changeIsLoading, name }) => {
     return (
-        <View style={styles.container}>
+        <View className="flex-1 absolute w-full h-full">
             <Pressable
-            onPress={()=>changeIsLoading()}
-            style={styles.closeContainer}>
+                onPress={() => changeIsLoading()}
+                style={styles.closeContainer}
+                className="absolute top-12 right-8 z-10 rounded-full w-10 h-10 bg-blue-500 flex items-center justify-center"
+                >
                 <Text style={styles.close}>X</Text>
             </Pressable>
-            <ActivityIndicator
-                size='small'
-                color='blue'
+
+            <Image
+                className="w-full h-full absolute top-0 left-0"
+                source={require('../../assets/loading.gif')}
+                contentFit="cover"
+                transition={1000}
             />
-            <Text style={styles.loginText}>{name} Loading...</Text>
         </View>
     )
 }
@@ -29,23 +35,6 @@ const styles = StyleSheet.create({
         height: '100%',
         alignItems: 'center',
         justifyContent: 'center',
-    },
-    loginText: {
-        fontWeight: 'bold',
-        fontSize: 16,
-        color: 'white',
-        marginTop: 20
-    },
-    closeContainer: {
-        backgroundColor: 'black',
-        width: 50,
-        height: 50,
-        borderRadius: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        top: 50,
-        right: 30
     },
     close: {
         color: 'white',
