@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { TextInput } from 'react-native'
 
-const CustomTextInput = ({ title, isSecureText, handleOnChangeText, handleValue, handlePlaceholder }) => {
+const CustomTextInput = ({ title, isSecureText, handleOnChangeText, handleValue, handlePlaceholder, keyboardType }) => {
     return (
         <View className="w-[80%] mb-5">
             <Text className="font-bold flex-start text-white">{title}</Text>
@@ -14,6 +14,7 @@ const CustomTextInput = ({ title, isSecureText, handleOnChangeText, handleValue,
                 className="w-full h-12 text-white border-white border-b border-x rounded-lg px-4 mt-2 bg-transparent"
                 onChangeText={handleOnChangeText}
                 value={handleValue}
+                keyboardType={keyboardType}
             />
         </View>
     )

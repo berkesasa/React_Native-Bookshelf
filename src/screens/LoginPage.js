@@ -35,6 +35,7 @@ export default function LoginPage({ navigation }) {
 
           <CustomTextInput
             title="Email"
+            keyboardType="email-address"
             isSecureText={false}
             handleOnChangeText={(text) => setEmail(text)}
             handleValue={email}
@@ -43,6 +44,7 @@ export default function LoginPage({ navigation }) {
 
           <CustomTextInput
             title="Password"
+            keyboardType="default"
             isSecureText={true}
             handleOnChangeText={(password) => setPassword(password)}
             handleValue={password}
@@ -53,7 +55,7 @@ export default function LoginPage({ navigation }) {
 
           <CustomButton
             buttonText="Login"
-            extraClasses='mt-5'
+            extraClasses='mt-2'
             handleOnPress={() => dispatch(login({ email, password }))}
           />
 

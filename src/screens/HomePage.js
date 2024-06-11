@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, TextInput, View, FlatList, SafeAreaView } from 'react-native'
+import { Pressable, StyleSheet, Text, TextInput, View, FlatList, SafeAreaView, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { doc, collection, addDoc, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
@@ -6,14 +6,15 @@ import { db } from '../../firebase/firebaseConfig';
 import { CustomButton } from '../components';
 import { useDispatch } from 'react-redux';
 import { logout } from '../redux/userSlice';
-import Animated, {FlipInYRight,StretchInX } from 'react-native-reanimated';
+import Animated, { FlipInYRight, StretchInX } from 'react-native-reanimated';
 
 
 const HomePage = () => {
 
   const [data, setData] = useState([]);
   const [isSaved, setIsSaved] = useState(false);
-  const [updateTheData, setUpdateTheData] = useState('');
+  const [bookTitle, setBookTitle] = useState('');
+  const [bookPage, setBookPage] = useState('');
   const dispatch = useDispatch()
 
   console.log(isSaved);
@@ -23,12 +24,23 @@ const HomePage = () => {
   }, [isSaved])
 
   // SEND DATA TO FIREBASE
+  // const sendData = async () => {
+  //   try {
+  //     const docRef = await addDoc(collection(db, "reactNativeLesson"), {
+  //       title: "Zero To Hero",
+  //       content: "React Native tutorial for beginner",
+  //       lesson: 95
+  //     });
+  //     console.log("Document written with ID: ", docRef.id);
+  //   } catch (e) {
+  //     console.error("Error adding document: ", e);
+  //   }
+  // }
   const sendData = async () => {
     try {
-      const docRef = await addDoc(collection(db, "reactNativeLesson"), {
-        title: "Zero To Hero",
-        content: "React Native tutorial for beginner",
-        lesson: 95
+      const docRef = await addDoc(collection(db, "bookStore"), {
+        title: bookTitle,
+        page: bookPage
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -41,7 +53,7 @@ const HomePage = () => {
     const allData = []
 
     try {
-      const querySnapshot = await getDocs(collection(db, "reactNativeLesson"));
+      const querySnapshot = await getDocs(collection(db, "bookStore"));
       querySnapshot.forEach((doc) => {
         allData.push({ ...doc.data(), id: doc.id })
       });
@@ -55,7 +67,7 @@ const HomePage = () => {
   //DELETE DATA FROM FIREBASE
   const deleteData = async (value) => {
     try {
-      await deleteDoc(doc(db, "reactNativeLesson", value));
+      await deleteDoc(doc(db, "bookStore", value));
       console.log("Delete successful");
     } catch (error) {
       console.log(error);
@@ -65,10 +77,10 @@ const HomePage = () => {
   //UPDATE DATA FROM FIREBASE
   const updateData = async (value) => {
     try {
-      const lessonData = doc(db, "reactNativeLesson", value);
+      const lessonData = doc(db, "bookStore", value);
 
       await updateDoc(lessonData, {
-        content: updateTheData
+        content: bookTitle
       });
 
     } catch (error) {
@@ -95,68 +107,68 @@ const HomePage = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar style='auto' />
-      <Text>HomePage</Text>
+      <ImageBackground source={require('../../assets/background.jpg')} className="w-full h-full flex-1 items-center justify-center">
 
-      <TextInput
-        value={updateTheData}
-        onChangeText={setUpdateTheData}
-        placeholder='enter your data'
-        style={{ borderWidth: 1, width: '50%', paddingVertical: 10, textAlign: 'center', marginBottom: 20 }}
-      />
+        <Text className="my-10">Bookshelf</Text>
 
-      <Animated.FlatList
-        entering={StretchInX}
-        style={styles.flatlist}
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={item => item.id}
-      />
+        <View className="flex-row items-center justify-center">
+          <TextInput
+            value={bookTitle}
+            onChangeText={setBookTitle}
+            placeholder='enter your data'
+            className="border border-white px-2 py-2"
+          />
+          <TextInput
+            keyboardType='number-pad'
+            value={bookPage}
+            onChangeText={setBookPage}
+            placeholder='enter your data'
 
-      <CustomButton
-        buttonText="Save"
-        setWidth="40%"
-        buttonColor="blue"
-        pressButtonColor="gray"
-        handleOnPress={() => {
-          { sendData(), setIsSaved(isSaved === false ? true : false) }
-        }}
-      />
+            className="border border-white px-2 py-2"
+          />
+        </View>
 
-      <CustomButton
-        buttonText="Get Data"
-        setWidth="40%"
-        buttonColor="blue"
-        pressButtonColor="gray"
-        handleOnPress={getData}
-      />
+        <Animated.FlatList
+          entering={StretchInX}
+          style={styles.flatlist}
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+        />
 
-      <CustomButton
-        buttonText="Delete Data"
-        setWidth="40%"
-        buttonColor="blue"
-        pressButtonColor="gray"
-        handleOnPress={deleteData}
-      />
+        <View className=" items-center justify-center">
+          <CustomButton
+            buttonText="Save"
+            handleOnPress={() => {
+              { sendData(), setIsSaved(isSaved === false ? true : false) }
+            }}
+          />
 
-      <CustomButton
-        buttonText="Update Data"
-        setWidth="40%"
-        buttonColor="blue"
-        pressButtonColor="gray"
-        handleOnPress={updateData}
-      />
+          <CustomButton
+            buttonText="Get Data"
+            handleOnPress={getData}
+          />
 
-      <CustomButton
-        buttonText="Logout"
-        setWidth="40%"
-        buttonColor="red"
-        pressButtonColor="gray"
-        handleOnPress={handleLogout}
-      />
+          <CustomButton
+            buttonText="Delete Data"
+            handleOnPress={deleteData}
+          />
 
-    </SafeAreaView>
+          <CustomButton
+            buttonText="Update Data"
+            handleOnPress={updateData}
+          />
+
+          <CustomButton
+            buttonText="Logout"
+            buttonColor="red"
+            handleOnPress={handleLogout}
+          />
+        </View>
+      </ImageBackground>
+    </View>
   )
 }
 

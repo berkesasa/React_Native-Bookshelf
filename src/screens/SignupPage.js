@@ -40,6 +40,7 @@ const SignupPage = ({ navigation }) => {
         <View className="flex flex-col justify-center w-full items-center">
           <CustomTextInput
             title="Name"
+            keyboardType="default"
             isSecureText={false}
             handleOnChangeText={setName}
             handleValue={name}
@@ -47,6 +48,7 @@ const SignupPage = ({ navigation }) => {
           />
           <CustomTextInput
             title="Email"
+            keyboardType="email-address"
             isSecureText={false}
             handleOnChangeText={setEmail}
             handleValue={email}
@@ -54,6 +56,7 @@ const SignupPage = ({ navigation }) => {
           />
           <CustomTextInput
             title="Password"
+            keyboardType="default"
             isSecureText={true}
             handleOnChangeText={setPassword}
             handleValue={password}
@@ -64,7 +67,7 @@ const SignupPage = ({ navigation }) => {
         <View className style={styles.signUpOptions}>
           <CustomButton
             buttonText="Sign Up"
-            extraClasses='mt-5'
+            extraClasses='mt-2'
             handleOnPress={handleRegister}
           />
           <View className="mt-5">
