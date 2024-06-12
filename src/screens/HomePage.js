@@ -7,6 +7,9 @@ import { CustomButton } from '../components';
 import { useDispatch } from 'react-redux';
 import { logout } from '../redux/userSlice';
 import Animated, { FlipInYRight, StretchInX } from 'react-native-reanimated';
+import Book from '../components/Book';
+import Shelf from '../components/Shelf';
+import { Image } from 'expo-image';
 
 
 const HomePage = () => {
@@ -112,6 +115,13 @@ const HomePage = () => {
       <ImageBackground source={require('../../assets/background.jpg')} className="w-full h-full flex-1 items-center justify-center">
 
         <Text className="my-10">Bookshelf</Text>
+
+        <View className="flex-row flex-wrap justify-center items-end">
+          <Book />
+        </View>
+        <View>
+          <Shelf />
+        </View>
 
         <View className="flex-row items-center justify-center">
           <TextInput
