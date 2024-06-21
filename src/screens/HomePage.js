@@ -117,7 +117,11 @@ const HomePage = () => {
         <Text className="my-10">Bookshelf</Text>
 
         <View className="flex-row flex-wrap justify-center items-end">
-          <Book />
+          {data.map((item, index) => {
+            return(
+              <Book key={index} data={item} bookIndex={index}/>
+            )
+          })}
         </View>
         <View>
           <Shelf />
