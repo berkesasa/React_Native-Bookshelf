@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, TextInput, View, FlatList, SafeAreaView, ImageBackground } from 'react-native'
+import { Pressable, StyleSheet, Text, TextInput, View, FlatList, SafeAreaView, ImageBackground, Modal } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { StatusBar } from 'expo-status-bar'
 import { doc, collection, addDoc, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
@@ -18,6 +18,9 @@ const HomePage = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [bookTitle, setBookTitle] = useState('');
   const [bookPage, setBookPage] = useState('');
+  const [bookAuthor, setBookAuthor] = useState('');
+  const [bookYear, setBookYear] = useState('');
+  const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch()
 
   console.log(isSaved);
@@ -40,10 +43,18 @@ const HomePage = () => {
   //   }
   // }
   const sendData = async () => {
+
+    if (data.length > 20) {
+      setModalVisible(true);
+      return;
+    }
+
     try {
       const docRef = await addDoc(collection(db, "bookStore"), {
         title: bookTitle,
-        page: bookPage
+        page: bookPage,
+        author: bookAuthor,
+        year: bookYear
       });
       console.log("Document written with ID: ", docRef.id);
     } catch (e) {
@@ -71,21 +82,8 @@ const HomePage = () => {
   const deleteData = async (value) => {
     try {
       await deleteDoc(doc(db, "bookStore", value));
+      getData()
       console.log("Delete successful");
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  //UPDATE DATA FROM FIREBASE
-  const updateData = async (value) => {
-    try {
-      const lessonData = doc(db, "bookStore", value);
-
-      await updateDoc(lessonData, {
-        content: bookTitle
-      });
-
     } catch (error) {
       console.log(error);
     }
@@ -109,50 +107,82 @@ const HomePage = () => {
     );
   };
 
+  const groupData = (data, groupSize) => {
+    let groups = [];
+    for (let i = 0; i < data.length; i += groupSize) {
+      groups.push(data.slice(i, i + groupSize));
+    }
+    return groups;
+  };
+
+  useEffect(() => {
+
+  }, [data]);
+
+  // Kitapları 6'lı gruplara ayır
+  const bookGroups = groupData(data, 7);
   return (
     <View style={styles.container}>
       <StatusBar style='auto' />
-      <ImageBackground source={require('../../assets/background.jpg')} className="w-full h-full flex-1 items-center justify-center">
-
-        <Text className="my-10">Bookshelf</Text>
-
-        <View className="flex-row flex-wrap justify-center items-end">
-          {data.map((item, index) => {
-            return(
-              <Book key={index} data={item} bookIndex={index}/>
-            )
-          })}
-        </View>
-        <View>
-          <Shelf />
-        </View>
-
-        <View className="flex-row items-center justify-center">
-          <TextInput
-            value={bookTitle}
-            onChangeText={setBookTitle}
-            placeholder='enter your data'
-            className="border border-white px-2 py-2"
-          />
-          <TextInput
-            keyboardType='number-pad'
-            value={bookPage}
-            onChangeText={setBookPage}
-            placeholder='enter your data'
-
-            className="border border-white px-2 py-2"
-          />
+      <ImageBackground source={require('../../assets/welcomebg.jpg')} className="w-full h-full flex-1 items-center justify-start">
+        <View className="px-5 mt-20 flex items-center">
+          {bookGroups.map((group, groupIndex) => (
+            <View key={groupIndex} className="w-full">
+              <View className="flex-row flex-wrap items-start justify-start w-full relative z-10 px-12">
+                {group.map((item, index) => (
+                  <Book key={index} data={item} bookIndex={groupIndex * 7 + index} deleteData={deleteData} />
+                ))}
+              </View>
+              <View className="-translate-y-3 relative">
+                <Shelf />
+              </View>
+            </View>
+          ))}
         </View>
 
-        <Animated.FlatList
+        <View className="flex items-center justify-center px-5">
+          <View className="flex flex-row">
+            <TextInput
+              value={bookTitle}
+              onChangeText={setBookTitle}
+              placeholder='enter your data'
+              className="h-12 text-white border-white border-b border-x rounded-b px-4 mt-2 bg-transparent w-2/3"
+            />
+            <TextInput
+              keyboardType='number-pad'
+              value={bookPage}
+              onChangeText={setBookPage}
+              placeholder='enter your data'
+              placeholderTextColor="white"
+              className="h-12 text-white border-white border-b border-x rounded-b px-4 mt-2 bg-transparent w-1/3"
+            />
+          </View>
+          <View className="flex flex-row">
+            <TextInput
+              value={bookAuthor}
+              onChangeText={setBookAuthor}
+              placeholder='enter your data'
+              className="h-12 text-white border-white border-b border-x rounded-b px-4 mt-2 bg-transparent w-2/3"
+            />
+            <TextInput
+              keyboardType='number-pad'
+              value={bookYear}
+              onChangeText={setBookYear}
+              placeholder='enter your data'
+              className="h-12 text-white border-white border-b border-x rounded-b px-4 mt-2 bg-transparent w-1/3"
+            />
+          </View>
+        </View>
+
+        {/* <Animated.FlatList
           entering={StretchInX}
           style={styles.flatlist}
           data={data}
           renderItem={renderItem}
           keyExtractor={item => item.id}
-        />
+        /> */}
 
-        <View className=" items-center justify-center">
+        <View className="flex items-center justify-center mt-10">
           <CustomButton
             buttonText="Save"
             handleOnPress={() => {
@@ -161,26 +191,36 @@ const HomePage = () => {
           />
 
           <CustomButton
-            buttonText="Get Data"
+            buttonText="Reload My Books"
             handleOnPress={getData}
           />
 
-          <CustomButton
+          {/* <CustomButton
             buttonText="Delete Data"
             handleOnPress={deleteData}
-          />
+          /> */}
 
           <CustomButton
-            buttonText="Update Data"
-            handleOnPress={updateData}
-          />
-
-          <CustomButton
+            extraClasses="bg-[#AE003C] mt-5"
             buttonText="Logout"
-            buttonColor="red"
             handleOnPress={handleLogout}
           />
         </View>
+
+
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}
+        >
+          <View style={styles.modalView}>
+            <Text>Data length is greater than 7. Cannot send data.</Text>
+            <Pressable title="Close" onPress={() => setModalVisible(!modalVisible)} />
+          </View>
+        </Modal>
       </ImageBackground>
     </View>
   )
@@ -192,8 +232,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
+    alignItems: 'center'
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
     alignItems: 'center',
-    backgroundColor: 'tomato'
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5
   },
   flatlistContainer: {
     borderWidth: 1,

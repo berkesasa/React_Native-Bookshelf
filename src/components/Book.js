@@ -1,53 +1,78 @@
-import { View, Text, Modal, Pressable, TouchableHighlight } from 'react-native'
+import { View, Text, Modal, Pressable, TouchableHighlight, StyleSheet } from 'react-native'
 import React, { useState } from 'react'
 import { Image } from 'expo-image'
+import CustomButton from './CustomButton'
 
 
-const Book = ({ bookIndex, data }) => {
-
-  print(data.id)
+const Book = ({ bookIndex, data, deleteData }) => {
   toString(bookIndex)
-  var sourcee = ""
-  var widthHeight = ""
 
-  if (bookIndex % 3 == 1) {
-    sourcee = require(`../../assets/kitap-1.png`)
-    widthHeight = ""
-  } else if (bookIndex % 3 == 2) {
-    sourcee = require(`../../assets/kitap-4.png`)
-  } else {
+  const handleDelete = () => {
+    const bookId = 'someBookId'; // Silmek istediğiniz kitabın ID'si
+    deleteData(data.id);
+  };
+
+  if (bookIndex % 5 == 1) {
     sourcee = require(`../../assets/kitap-2.png`)
+    widthHeight = ""
+  } else if (bookIndex % 5 == 2) {
+    sourcee = require(`../../assets/kitap-3.png`)
+  } else if (bookIndex % 5 == 3) {
+    sourcee = require(`../../assets/kitap-4.png`)
+  } else if (bookIndex % 5 == 4) {
+    sourcee = require(`../../assets/kitap-5.png`)
+  } else {
+    sourcee = require(`../../assets/kitap-1.png`)
   }
 
-  print(sourcee)
-
   const [modalVisible, setModalVisible] = useState(false);
+
 
   return (
     <View className="relative">
       <Modal
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         statusBarTranslucent={true}
         visible={modalVisible}
         onRequestClose={() => {
-          Alert.alert('Modal has been closed.');
           setModalVisible(!modalVisible);
         }}>
-        <View className="flex-1 items-center justify-center h-full bg-black">
-          <View className="w-52 h-52 bg-white rounded-xl">
-            <Text>Hello World!</Text>
+        <View className="absolute bottom-0 h-[40%] w-full">
+          <View className="bg-white rounded-t-xl relative p-7 h-full">
+            <Text>{data.title}</Text>
+            <Text>{data.page}</Text>
+            <Text>{data.value}</Text>
+            <CustomButton
+              buttonText="Delete Data"
+              handleOnPress={handleDelete}
+            />
             <Pressable
-
+              className="absolute top-3 right-3 bg-black rounded-full w-10 h-10 flex items-center justify-center"
               onPress={() => setModalVisible(!modalVisible)}>
-              <Text>Hide Modal</Text>
+              <Text className="text-white">X</Text>
             </Pressable>
           </View>
         </View>
       </Modal>
-      <TouchableHighlight onPress={() => setModalVisible(true)}>
+
+      {/* <Modal animationType="slide" transparent={true} visible={isVisible}>
+        <View style={styles.modalContent}>
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Choose a sticker</Text>
+            <Pressable onPress={onClose}>
+              <MaterialIcons name="close" color="#fff" size={22} />
+            </Pressable>
+          </View>
+          {children}
+        </View>
+      </Modal> */}
+
+      <TouchableHighlight
+        underlayColor="transparent"
+        onPress={() => setModalVisible(true)}>
         <Image
-          className="w-10 h-[120px]"
+          className="w-8 h-24"
           source={sourcee}
           contentFit="contain"
           transition={1000}
@@ -59,6 +84,33 @@ const Book = ({ bookIndex, data }) => {
 }
 
 export default Book
+
+const styles = StyleSheet.create({
+  modalContent: {
+    height: '25%',
+    width: '100%',
+    backgroundColor: '#25292e',
+    borderTopRightRadius: 18,
+    borderTopLeftRadius: 18,
+    position: 'absolute',
+    bottom: 0,
+  },
+  titleContainer: {
+    height: '16%',
+    backgroundColor: '#464C55',
+    borderTopRightRadius: 10,
+    borderTopLeftRadius: 10,
+    paddingHorizontal: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  title: {
+    color: '#fff',
+    fontSize: 16,
+  },
+});
+
 
 
 
