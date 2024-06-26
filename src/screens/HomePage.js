@@ -10,57 +10,14 @@ import Animated, { FlipInYRight, StretchInX } from 'react-native-reanimated';
 import Book from '../components/Book';
 import Shelf from '../components/Shelf';
 import { Image } from 'expo-image';
+import AddBook from '../components/AddBook';
 
 
 const HomePage = () => {
 
   const [data, setData] = useState([]);
-  const [isSaved, setIsSaved] = useState(false);
-  const [bookTitle, setBookTitle] = useState('');
-  const [bookPage, setBookPage] = useState('');
-  const [bookAuthor, setBookAuthor] = useState('');
-  const [bookYear, setBookYear] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const dispatch = useDispatch()
-
-  console.log(isSaved);
-
-  useEffect(() => {
-    getData()
-  }, [isSaved])
-
-  // SEND DATA TO FIREBASE
-  // const sendData = async () => {
-  //   try {
-  //     const docRef = await addDoc(collection(db, "reactNativeLesson"), {
-  //       title: "Zero To Hero",
-  //       content: "React Native tutorial for beginner",
-  //       lesson: 95
-  //     });
-  //     console.log("Document written with ID: ", docRef.id);
-  //   } catch (e) {
-  //     console.error("Error adding document: ", e);
-  //   }
-  // }
-  const sendData = async () => {
-
-    if (data.length > 20) {
-      setModalVisible(true);
-      return;
-    }
-
-    try {
-      const docRef = await addDoc(collection(db, "bookStore"), {
-        title: bookTitle,
-        page: bookPage,
-        author: bookAuthor,
-        year: bookYear
-      });
-      console.log("Document written with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error adding document: ", e);
-    }
-  }
 
   // GET DATA FROM FIREBASE
   const getData = async () => {
@@ -94,19 +51,6 @@ const HomePage = () => {
     dispatch(logout())
   }
 
-  const renderItem = ({ item, index }) => {
-    return (
-      <Animated.View
-        entering={FlipInYRight.delay((1 + index) * 100)}
-        style={styles.flatlistContainer}>
-        <Text>{item.id}</Text>
-        <Text>{item.title}</Text>
-        <Text>{item.content}</Text>
-        {/* <Text>{item.lesson}</Text> */}
-      </Animated.View>
-    );
-  };
-
   const groupData = (data, groupSize) => {
     let groups = [];
     for (let i = 0; i < data.length; i += groupSize) {
@@ -115,18 +59,26 @@ const HomePage = () => {
     return groups;
   };
 
-  useEffect(() => {
-
-  }, [data]);
 
   // Kitapları 6'lı gruplara ayır
   const bookGroups = groupData(data, 7);
   return (
     <View style={styles.container}>
-      <StatusBar style='auto' />
-      <ImageBackground source={require('../../assets/welcomebg.jpg')} className="w-full h-full flex-1 items-center justify-start">
+      <StatusBar style='light' />
+      <ImageBackground source={require('../../assets/welcomebg.jpg')} className="w-full h-full flex-1 items-center justify-between">
+        {/* Books */}
         <View className="px-5 mt-20 flex items-center">
-          {bookGroups.map((group, groupIndex) => (
+          {bookGroups.length == 0 ? (
+            <View>
+              <Image
+                className="w-60 h-40"
+                source={require('../../assets/nobook.png')}
+                contentFit="contain"
+                transition={1000}
+              />
+              <Text className="text-white text-center">You have no book. Please add!</Text>
+            </View>
+          ) : bookGroups.map((group, groupIndex) => (
             <View key={groupIndex} className="w-full">
               <View className="flex-row flex-wrap items-start justify-start w-full relative z-10 px-12">
                 {group.map((item, index) => (
@@ -140,71 +92,25 @@ const HomePage = () => {
           ))}
         </View>
 
-        <View className="flex items-center justify-center px-5">
-          <View className="flex flex-row">
-            <TextInput
-              value={bookTitle}
-              onChangeText={setBookTitle}
-              placeholder='enter your data'
-              className="h-12 text-white border-white border-b border-x rounded-b px-4 mt-2 bg-transparent w-2/3"
-            />
-            <TextInput
-              keyboardType='number-pad'
-              value={bookPage}
-              onChangeText={setBookPage}
-              placeholder='enter your data'
-              placeholderTextColor="white"
-              className="h-12 text-white border-white border-b border-x rounded-b px-4 mt-2 bg-transparent w-1/3"
-            />
-          </View>
-          <View className="flex flex-row">
-            <TextInput
-              value={bookAuthor}
-              onChangeText={setBookAuthor}
-              placeholder='enter your data'
-              className="h-12 text-white border-white border-b border-x rounded-b px-4 mt-2 bg-transparent w-2/3"
-            />
-            <TextInput
-              keyboardType='number-pad'
-              value={bookYear}
-              onChangeText={setBookYear}
-              placeholder='enter your data'
-              className="h-12 text-white border-white border-b border-x rounded-b px-4 mt-2 bg-transparent w-1/3"
-            />
-          </View>
-        </View>
+        {/* Buttons */}
+        <View className="flex items-center justify-center my-10">
+          {/* Add Book */}
+          <AddBook data={data} getData={getData} />
 
-        {/* <Animated.FlatList
-          entering={StretchInX}
-          style={styles.flatlist}
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={item => item.id}
-        /> */}
-
-        <View className="flex items-center justify-center mt-10">
+          {/* Synchronice Book in Database */}
           <CustomButton
-            buttonText="Save"
-            handleOnPress={() => {
-              { sendData(), setIsSaved(isSaved === false ? true : false) }
-            }}
-          />
-
-          <CustomButton
+            extraClasses="mt-5"
             buttonText="Reload My Books"
             handleOnPress={getData}
           />
 
-          {/* <CustomButton
-            buttonText="Delete Data"
-            handleOnPress={deleteData}
-          /> */}
-
-          <CustomButton
-            extraClasses="bg-[#AE003C] mt-5"
-            buttonText="Logout"
-            handleOnPress={handleLogout}
-          />
+          {/* Logout */}
+          <Pressable
+            onPress={handleLogout}
+            className={`rounded-full px-10 py-3 flex items-center justify-center bg-[#AE003C] mt-5`}
+          >
+            <Text className="text-white font-bold text-lg">Logout</Text>
+          </Pressable>
         </View>
 
 

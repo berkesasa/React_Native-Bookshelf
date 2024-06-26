@@ -44,7 +44,7 @@ const SignupPage = ({ navigation }) => {
             isSecureText={false}
             handleOnChangeText={setName}
             handleValue={name}
-            handlePlaceholder="Enter Your Name"
+            handlePlaceholder="Your Name"
           />
           <CustomTextInput
             title="Email"
@@ -52,7 +52,7 @@ const SignupPage = ({ navigation }) => {
             isSecureText={false}
             handleOnChangeText={setEmail}
             handleValue={email}
-            handlePlaceholder="Enter Your Email"
+            handlePlaceholder="Your Email"
           />
           <CustomTextInput
             title="Password"
@@ -60,7 +60,7 @@ const SignupPage = ({ navigation }) => {
             isSecureText={true}
             handleOnChangeText={setPassword}
             handleValue={password}
-            handlePlaceholder="Create Your Password"
+            handlePlaceholder="Your Password"
           />
         </View>
 
