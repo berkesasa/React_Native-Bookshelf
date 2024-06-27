@@ -21,7 +21,7 @@ export default function LoginPage({ navigation }) {
   return (
     <View className="w-full h-full">
 
-      <StatusBar style="auto" />
+      <StatusBar style='light' />
 
       <ImageBackground source={require('../../assets/background.jpg')} className="w-full h-full flex-1 items-center justify-center">
 

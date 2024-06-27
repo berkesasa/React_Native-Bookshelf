@@ -1,8 +1,8 @@
-import { View, Text, Modal, Pressable, TextInput } from 'react-native'
+import { View, Text, Modal, Pressable } from 'react-native'
 import CustomButton from './CustomButton'
 import AddBookTextInput from './AddBookTextInput'
 import React, { useState, useEffect } from 'react'
-import { doc, collection, addDoc, getDocs, deleteDoc, updateDoc } from "firebase/firestore";
+import { doc, collection, addDoc } from "firebase/firestore";
 import { db } from '../../firebase/firebaseConfig';
 
 const AddBook = ({ data, getData }) => {
@@ -11,10 +11,11 @@ const AddBook = ({ data, getData }) => {
     const [bookPage, setBookPage] = useState('');
     const [bookAuthor, setBookAuthor] = useState('');
     const [bookYear, setBookYear] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
     const [isSaved, setIsSaved] = useState(false);
 
     const sendData = async () => {
-        if (data.length > 20) {
+        if (data.length > 13) {
             setModalVisible(true);
             return;
         }
@@ -36,6 +37,7 @@ const AddBook = ({ data, getData }) => {
     return (
         <View>
             <CustomButton
+                extraClasses='px-5'
                 buttonText="Add Book"
                 handleOnPress={() => setModalAddBook(true)}
             />
@@ -89,6 +91,23 @@ const AddBook = ({ data, getData }) => {
                     <Pressable
                         className="absolute top-3 right-3 bg-black rounded-full w-10 h-10 flex items-center justify-center"
                         onPress={() => setModalAddBook(!modalAddBook)}>
+                        <Text className="text-white">X</Text>
+                    </Pressable>
+                </View>
+            </Modal>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View className="bg-white m-5 rounded-2xl p-8 justify-start items-center relative">
+                    <Text className="pr-7">You can add up to 14 books to your library!</Text>
+                    <Pressable
+                        className="absolute top-3 right-3 bg-black rounded-full w-10 h-10 flex items-center justify-center"
+                        onPress={() => setModalVisible(!modalVisible)}>
                         <Text className="text-white">X</Text>
                     </Pressable>
                 </View>

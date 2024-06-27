@@ -8,7 +8,7 @@ const Welcome = ({ navigation }) => {
     return (
         <View className="w-full h-full relative">
             <StatusBar style="light" />
-            <ImageBackground source={require('../../assets/welcomebg.jpg')} className="w-full h-full flex-1 items-center justify-end">
+            <ImageBackground source={require('../../assets/welcome-bg.jpg')} className="w-full h-full flex-1 items-center justify-end">
                 <View className="self-start px-5">
                     <Text className="text-white font-medium text-2xl">Explore your</Text>
                     <Text className="text-white font-extrabold text-5xl mt-1">Book World</Text>
@@ -22,7 +22,7 @@ const Welcome = ({ navigation }) => {
                 />
 
                 <View className="w-full py-3 relative bg-white/30 mb-5">
-                    <Text className="text-white text-center font-medium text-lg">Lorem ipsum dolor sit amet.</Text>
+                    <Text className="text-white text-center font-medium text-lg">Your books, your world</Text>
                 </View>
 
                 <CustomButton

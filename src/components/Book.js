@@ -1,4 +1,4 @@
-import { View, Text, Modal, Pressable, TouchableHighlight, StyleSheet } from 'react-native'
+import { View, Text, Modal, Pressable, TouchableHighlight } from 'react-native'
 import React, { useState } from 'react'
 import { Image } from 'expo-image'
 import Svg, { G, Path, Rect } from "react-native-svg";
@@ -9,6 +9,7 @@ const Book = ({ bookIndex, data, deleteData }) => {
 
   const handleDelete = () => {
     deleteData(data.id);
+    setModalVisible(!modalVisible)
   };
 
   if (bookIndex % 5 == 1) {
@@ -25,7 +26,6 @@ const Book = ({ bookIndex, data, deleteData }) => {
   }
 
   const [modalVisible, setModalVisible] = useState(false);
-
 
   return (
     <View className="relative">
@@ -164,67 +164,3 @@ const Book = ({ bookIndex, data, deleteData }) => {
 }
 
 export default Book
-
-const styles = StyleSheet.create({
-  modalContent: {
-    height: '25%',
-    width: '100%',
-    backgroundColor: '#25292e',
-    borderTopRightRadius: 18,
-    borderTopLeftRadius: 18,
-    position: 'absolute',
-    bottom: 0,
-  },
-  titleContainer: {
-    height: '16%',
-    backgroundColor: '#464C55',
-    borderTopRightRadius: 10,
-    borderTopLeftRadius: 10,
-    paddingHorizontal: 20,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  title: {
-    color: '#fff',
-    fontSize: 16,
-  },
-});
-
-
-
-
-{/* <View className="flex-row flex-wrap justify-center items-end">
-<View className="relative">
-  <Image
-    className="w-10 h-[120px]"
-    source={require(`../../assets/kitap-1.png`)}
-    contentFit="contain"
-    transition={1000}
-  />
-</View>
-<View className="relative">
-  <Image
-    className="w-10 h-[120px]"
-    source={require(`../../assets/kitap-2.png`)}
-    contentFit="contain"
-    transition={1000}
-  />
-</View>
-<View className="relative right-2.5">
-  <Image
-    className="w-[52px] h-[156px]"
-    source={require(`../../assets/kitap-3-2.png`)}
-    contentFit="contain"
-    transition={1000}
-  />
-</View>
-<View className="relative">
-  <Image
-    className="w-10 h-[120px]"
-    source={require(`../../assets/kitap-4.png`)}
-    contentFit="contain"
-    transition={1000}
-  />
-</View>
-</View> */}
